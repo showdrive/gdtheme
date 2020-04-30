@@ -75,6 +75,21 @@ function list(path){
   <div class="mdui-textfield">
   <input class="mdui-textfield-input" id = "myInput" onkeyup="myFunction()" type="text" placeholder="Search Here"/>
 </div>
+	  
+	 <div class="mdui-row"> 
+	 <ul id="list" class="mdui-list"> 
+	  </ul> 
+	 </div>
+	 <button class="mdui-fab  mdui-ripple" onClick = 'ShareLink()' style = "margin-bottom : 20px"><i class="mdui-icon material-icons">share</i></button>
+	 <div id="readme_md" class="mdui-typo" style="display:none; padding: 20px 0;"></div>
+	`;
+	}
+	else{
+		var content = `
+	<div id="head_md" class="mdui-typo" style="display:none;padding: 20px 0;"></div>
+	<div class="mdui-textfield">
+  <input class="mdui-textfield-input" id = "myInput" onkeyup="myFunction()" type="text" placeholder="Search Here"/>
+</div>
 
 	 <div class="mdui-row"> 
 	  <ul class="mdui-list"> 
