@@ -291,12 +291,8 @@ function file_image(path){
 	  <input class="mdui-textfield-input" type="text" value="${url}"/>
 	</div>
 	<div class="mdui-textfield">
-	  <label class="mdui-textfield-label">HTML Quote Address</label>
-	  <input class="mdui-textfield-input" type="text" value="<img src='${url}' />"/>
 	</div>
         <div class="mdui-textfield">
-	  <label class="mdui-textfield-label">Markdown Quote Address</label>
-	  <input class="mdui-textfield-input" type="text" value="![](${url})"/>
 	</div>
         <br>
 </div>
