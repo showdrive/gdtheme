@@ -68,29 +68,22 @@ function nav(path){
     $('#nav').html(html);
 }
 
-// List files
+// 渲染文件列表
 function list(path){
-    var content = "";
-	content += `
-	<div id="head_md" class="mdui-typo" style="display:none;padding: 20px 0;"></div>`;
-    if(search){
-        if(dark){content += `<div class="mdui-textfield"><input class="mdui-textfield-input mdui-text-color-white-text" id="searchInput" onkeyup="searchOnlyActiveDir()" type="text" placeholder="Type to search.."></input></div>`;
-        }else{content += `<div class="mdui-textfield"><input class="mdui-textfield-input" id="searchInput" onkeyup="searchOnlyActiveDir()" type="text" placeholder="Type to search.."></input></div>`;}
-    }
-	content += `<div class="mdui-row"> 
+	var content = `
+	<div id="head_md" class="mdui-typo" style="display:none;padding: 20px 0;"></div>
+
+	 <div class="mdui-row"> 
 	  <ul class="mdui-list"> 
 	   <li class="mdui-list-item th"> 
 	    <div class="mdui-col-xs-12 mdui-col-sm-7">
-	    File
-	<i class="mdui-icon material-icons icon-sort" data-sort="name" data-order="more">expand_more</i>
+	     File Name
 	    </div> 
 	    <div class="mdui-col-sm-3 mdui-text-right">
-        Change the time
-	<i class="mdui-icon material-icons icon-sort" data-sort="date" data-order="downward">expand_more</i>
+	     Change Time
 	    </div> 
 	    <div class="mdui-col-sm-2 mdui-text-right">
-	     Size
-	<i class="mdui-icon material-icons icon-sort" data-sort="size" data-order="downward">expand_more</i>
+	     File Size
 	    </div> 
 	    </li> 
 	  </ul> 
@@ -102,12 +95,22 @@ function list(path){
 	 <div id="readme_md" class="mdui-typo" style="display:none; padding: 20px 0;"></div>
 	`;
 	$('#content').html(content);
+	
+    var password = localStorage.getItem('password'+path);
     $('#list').html(`<div class="mdui-progress"><div class="mdui-progress-indeterminate"></div></div>`);
     $('#readme_md').hide().html('');
     $('#head_md').hide().html('');
-    $.post(path, function(data,status){
+    $.post(path,'{"password":"'+password+'"}', function(data,status){
         var obj = jQuery.parseJSON(data);
-        if(typeof obj != 'null'){
+        if(typeof obj != 'null' && obj.hasOwnProperty('error') && obj.error.code == '401'){
+            var pass = prompt("Please Enter Password","");
+            localStorage.setItem('password'+path, pass);
+            if(pass != null && pass != ""){
+                list(path);
+            }else{
+                history.go(-1);
+            }
+        }else if(typeof obj != 'null'){
             list_files(path,obj.files);
         }
     });
@@ -122,7 +125,7 @@ function list_files(path,files){
             item['size'] = "";
         }
 
-        item['modifiedTime'] = utc2jakarta(item['modifiedTime']);
+        item['modifiedTime'] = utc2beijing(item['modifiedTime']);
         item['size'] = formatFileSize(item['size']);
         if(item['mimeType'] == 'application/vnd.google-apps.folder'){
             html +=`<li class="mdui-list-item mdui-ripple"><a href="${p}" class="folder">
@@ -148,7 +151,7 @@ function list_files(path,files){
                 });
             }
             var ext = p.split('.').pop();
-            if("|html|php|css|go|java|js|json|txt|sh|md|mp4|webm|avi|bmp|jpg|jpeg|png|gif|m4a|mp3|wav|ogg|mpg|mpeg|mkv|rm|rmvb|mov|wmv|asf|ts|flv|".indexOf(`|${ext}|`) >= 0){
+            if("|html|php|css|go|java|js|json|txt|sh|md|mp4|webm|mkv|bmp|jpg|jpeg|png|gif|".indexOf(`|${ext}|`) >= 0){
 	            p += "?a=view";
 	            c += " view";
             }
